@@ -11,6 +11,7 @@ export default function DashboardScreen() {
 
   const handleSendAlert = () => {
     addAlert("Manual Alert", "User Triggered");
+    router.push("/(app)/feed");
   };
 
   return (
