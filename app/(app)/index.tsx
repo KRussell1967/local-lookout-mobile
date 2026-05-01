@@ -3,10 +3,15 @@ import { View, Text, Pressable, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { useAuth } from "@/auth/AuthProvider";
+import { addAlert } from "@/lib/alertStore";
 
 export default function DashboardScreen() {
   const { profile } = useAuth();
   const router = useRouter();
+
+  const handleSendAlert = () => {
+    addAlert("Manual Alert", "User Triggered");
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#0f172a" }}>
@@ -28,7 +33,7 @@ export default function DashboardScreen() {
 
         <View className="bg-card border border-border rounded-xl p-4 mb-4">
           <Text className="text-foreground font-semibold mb-3">Quick Actions</Text>
-          <Pressable onPress={() => {}} className="bg-primary rounded-xl py-3 items-center mb-3">
+          <Pressable onPress={handleSendAlert} className="bg-primary rounded-xl py-3 items-center mb-3">
             <Text className="text-primary-foreground font-semibold">Send Alert</Text>
           </Pressable>
           <Pressable onPress={() => router.push("/(app)/feed")} className="bg-muted rounded-xl py-3 items-center">

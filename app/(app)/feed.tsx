@@ -1,41 +1,32 @@
-import React from "react";
-import { View, Text, FlatList } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-
-const mockAlerts = [
-  { id: "1", title: "Suspicious Activity", location: "Ayr High Street", time: "2 mins ago" },
-  { id: "2", title: "Shoplifting Incident", location: "Kyle Centre", time: "10 mins ago" },
-  { id: "3", title: "Vehicle Break-in", location: "Car Park Level 2", time: "25 mins ago" },
-];
+import { getAlerts, subscribe } from "@/lib/alertStore";
 
 export default function FeedScreen() {
+  const [alerts, setAlerts] = useState(getAlerts());
+
+  useEffect(() => {
+    return subscribe(() => setAlerts([...getAlerts()]));
+  }, []);
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#0f172a" }}>
-      <FlatList
-        data={mockAlerts}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={{ padding: 16 }}
-        renderItem={({ item }) => (
-          <View style={{
-            backgroundColor: "#1e293b",
-            borderColor: "#334155",
-            borderWidth: 1,
-            borderRadius: 12,
-            padding: 16,
-            marginBottom: 12
-          }}>
-            <Text style={{ color: "#fff", fontWeight: "600", fontSize: 16 }}>
-              {item.title}
-            </Text>
-            <Text style={{ color: "#94a3b8", marginTop: 4 }}>
-              {item.location}
-            </Text>
-            <Text style={{ color: "#64748b", marginTop: 2, fontSize: 12 }}>
-              {item.time}
-            </Text>
-          </View>
+      <ScrollView contentContainerStyle={{ padding: 24 }}>
+        <Text className="text-foreground text-2xl font-bold mb-6">Feed</Text>
+
+        {alerts.length === 0 ? (
+          <Text className="text-muted-foreground text-center">No alerts yet.</Text>
+        ) : (
+          alerts.map((alert) => (
+            <View key={alert.id} className="bg-card border border-border rounded-xl p-4 mb-3">
+              <Text className="text-foreground font-semibold mb-1">{alert.title}</Text>
+              <Text className="text-muted-foreground text-sm">{alert.location}</Text>
+              <Text className="text-muted-foreground text-xs mt-1">{alert.time}</Text>
+            </View>
+          ))
         )}
-      />
+      </ScrollView>
     </SafeAreaView>
   );
 }
